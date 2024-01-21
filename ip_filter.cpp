@@ -15,12 +15,13 @@ using pool_t = std::vector<ip_addr_t>;
 
 static pool_t ip_pool;
 
+// Build a static 2D vector of integers from the input list of IP addresses
 void fill_in_the_pool(pool_t &res)
 {
     try
     {
-        std::ifstream in("input/ip_filter.tsv");
-        std::cin.rdbuf(in.rdbuf()); // redirect std::cin to input/ip_filter.tsv
+        // std::ifstream in("input/ip_filter.tsv");
+        // std::cin.rdbuf(in.rdbuf()); // redirect std::cin to input/ip_filter.tsv
         for (std::string line; std::getline(std::cin, line);)
         {
             ip_addr_t v(nof_addr_groups, 0);
@@ -42,12 +43,15 @@ void fill_in_the_pool(pool_t &res)
     }
 }
 
+// Folds up all uchar (binary) parts of an IP address into a 4-bytes int
+// to enable comparison
 unsigned int make_int(const ip_addr_t &addr)
 {
-    return std::accumulate(addr.begin(), addr.end(), 0, [](unsigned int acc, unsigned char it)
+    return std::accumulate(addr.begin(), addr.end(), 0, [](unsigned int acc, unsigned char it) -> unsigned int
                            { return acc * _256_ + it; });
 }
 
+// Console-outputs an IP-address vector
 void output_address(const ip_addr_t &addr)
 {
     std::stringstream ss;
@@ -60,22 +64,28 @@ void output_address(const ip_addr_t &addr)
     std::cout << s << std::endl;
 }
 
+// Outputs the whole vector of IP-addresses,
+// for each of provided lambda-ed output filters
 template <typename... Lambda>
 void multi_output_ip_pool(Lambda &&...filters)
 {
     (void(std::for_each(ip_pool.begin(), ip_pool.end(), std::forward<Lambda>(filters))), ...);
 }
 
+// Inputs, sorts and filter-outputs IP-addresses
 int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[])
 {
+    // Makes the pool of IP-addresses in memory
     fill_in_the_pool(ip_pool);
 
+    // Performs sorting
     std::sort(ip_pool.begin(), ip_pool.end(),
               [](const ip_addr_t &a, const ip_addr_t &b) -> bool
               {
                   return (make_int(a) > make_int(b));
               });
 
+    // Does filtered output
     multi_output_ip_pool(
         [](auto addr) -> void
         { output_address(addr); },
