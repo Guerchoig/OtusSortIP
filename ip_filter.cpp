@@ -13,14 +13,13 @@ constexpr unsigned char FILT_ADR2 = 46;
 constexpr unsigned char FILT_ADR3 = 70;
 constexpr unsigned char FILT_ADR4 = 46;
 
-// A fixed size int array represents an IP address
+// The type of one IP address
 using ip_addr_t = std::vector<unsigned char>; // size = nof_addr_groups
 
 // The type of the whole list of IP addresses
-// is a vector of fixed size arrays
 using pool_t = std::vector<ip_addr_t>;
 
-// The storage for the numeric list of IP's
+// The storage for the numeric list of IPs
 static pool_t ip_pool;
 
 // Fill up the list of IPs
@@ -51,8 +50,8 @@ void fill_the_pool(pool_t &res)
     }
 }
 
-// Folds up all uchar (binary) chunks of an IP address into a 4-bytes int
-// to enable comparison
+// Forms up a a 4-bytes int representation of an IP address
+// to enable comparison of addresses
 inline unsigned int make_int(const ip_addr_t &addr)
 {
     unsigned int res = 0;
@@ -61,7 +60,7 @@ inline unsigned int make_int(const ip_addr_t &addr)
     return res;
 }
 
-// Outputs an IP-address vector to cout
+// Outputs an IP-address vector to std::cout
 void output_address(const ip_addr_t &addr)
 {
     std::stringstream ss;
@@ -75,14 +74,14 @@ void output_address(const ip_addr_t &addr)
 }
 
 // Outputs the whole vector of IP-addresses,
-// for each of provided filters
+// - once for every provided filter
 template <typename... Lambda>
 void multi_output_ip_pool(Lambda &&...filters)
 {
     (void(std::for_each(ip_pool.begin(), ip_pool.end(), std::forward<Lambda>(filters))), ...);
 }
 
-// Inputs, sorts and filter-outputs IP-addresses
+// Inputs, sorts and filter-outputs IP addresses
 int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[])
 {
     // Makes the pool of IP-addresses in memory
