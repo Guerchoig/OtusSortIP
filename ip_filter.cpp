@@ -6,8 +6,10 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <numeric>
 
 constexpr int nof_addr_groups = 4;
+constexpr unsigned int _256_ = 256;
 using ip_addr_t = std::vector<unsigned char>;
 using pool_t = std::vector<ip_addr_t>;
 
@@ -40,12 +42,10 @@ void fill_in_the_pool(pool_t &res)
     }
 }
 
-inline unsigned int make_int(const ip_addr_t &a)
+unsigned int make_int(const ip_addr_t &addr)
 {
-    unsigned int res = 0;
-    for (auto triade : a)
-        res = res * 256 + triade;
-    return res;
+    return std::accumulate(addr.begin(), addr.end(), 0, [](unsigned int acc, unsigned char it)
+                           { return acc * _256_ + it; });
 }
 
 void output_address(const ip_addr_t &addr)
@@ -87,8 +87,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[])
         { if(addr[0] == 46 && addr[1] == 70) output_address(addr); },
 
         [](auto addr) -> void
-        { bool res = false;
-                  for(auto triade:addr) res = res || triade == 46;
-                  if(res) output_address(addr); });
+        { if (std::accumulate(addr.begin(), addr.end(), false, [](bool acc, unsigned char it)
+                                       { return acc || it == 46; })) output_address(addr); });
     return 0;
 }
