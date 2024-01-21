@@ -10,6 +10,11 @@
 
 constexpr int nof_addr_groups = 4;
 constexpr unsigned int _256_ = 256;
+constexpr unsigned char FILT_ADR1 = 1;
+constexpr unsigned char FILT_ADR2 = 46;
+constexpr unsigned char FILT_ADR3 = 70;
+constexpr unsigned char FILT_ADR4 = 46;
+
 using ip_addr_t = std::vector<unsigned char>;
 using pool_t = std::vector<ip_addr_t>;
 
@@ -91,13 +96,13 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[])
         { output_address(addr); },
 
         [](auto addr) -> void
-        { if(addr[0] == 1) output_address(addr); },
+        { if(addr[0] == FILT_ADR1) output_address(addr); },
 
         [](auto addr) -> void
-        { if(addr[0] == 46 && addr[1] == 70) output_address(addr); },
+        { if(addr[0] == FILT_ADR2 && addr[1] == FILT_ADR3) output_address(addr); },
 
         [](auto addr) -> void
         { if (std::accumulate(addr.begin(), addr.end(), false, [](bool acc, unsigned char it)
-                                       { return acc || it == 46; })) output_address(addr); });
+                                       { return acc || it == FILT_ADR4; })) output_address(addr); });
     return 0;
 }
