@@ -1,4 +1,4 @@
-#include "config.h"
+// #include "config.h"
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
@@ -17,8 +17,8 @@ void fill_in_the_pool(pool_t &res)
 {
     try
     {
-        // std::ifstream in("input/ip_filter.tsv");
-        // std::cin.rdbuf(in.rdbuf()); // redirect std::cin to input/ip_filter.tsv
+        std::ifstream in("input/ip_filter.tsv");
+        std::cin.rdbuf(in.rdbuf()); // redirect std::cin to input/ip_filter.tsv
         for (std::string line; std::getline(std::cin, line);)
         {
             ip_addr_t v(nof_addr_groups, 0);
