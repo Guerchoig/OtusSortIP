@@ -110,8 +110,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[])
 
         [](auto &addr) -> void
         { bool res = false;
-        for(auto i:addr)
-            res = res || i == FILT_ADR4;
-        if (res) output_address(addr); });
+            for(auto i:addr)
+                res = res || i == FILT_ADR4;
+            if (res) output_address(addr); });
     return 0;
 }
