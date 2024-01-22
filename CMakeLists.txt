@@ -5,7 +5,26 @@ set(PROJECT_VESRION 0.0.${PATCH_VERSION})
 
 project(ip_filter VERSION ${PROJECT_VESRION})
 
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+# find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+
+
+
+
+
+
+
+
+
 
 configure_file(config.h.in config.h)
 
@@ -45,6 +64,19 @@ set(CPACK_PACKAGE_CONTACT alex-guerchoig@yandex.ru)
 
 include(CPack)
 
-# enable_testing()
+enable_testing()
+
+add_executable(
+  ip_filter_test
+  ip_filter_test.cpp
+)
+
+target_link_libraries(
+  ip_filter_test
+  GTest::gtest_main
+)
+
+include(GoogleTest)
+gtest_discover_tests(ip_filter_test)
 
 # add_test(test_ip_filter test_ip_filter)

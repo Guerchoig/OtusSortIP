@@ -1,26 +1,11 @@
+#include "ip_filter.h"
 #include "config.h"
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <string>
 #include <sstream>
-
-constexpr std::size_t nof_addr_groups = 4;
-constexpr unsigned int _256_ = 256;
-constexpr unsigned char FILT_ADR1 = 1;
-constexpr unsigned char FILT_ADR2 = 46;
-constexpr unsigned char FILT_ADR3 = 70;
-constexpr unsigned char FILT_ADR4 = 46;
-
-// The type of one IP address
-using ip_addr_t = std::vector<unsigned char>; // size = nof_addr_groups
-
-// The type of the whole list of IP addresses
-using pool_t = std::vector<ip_addr_t>;
-
-// The storage for the numeric list of IPs
-static pool_t ip_pool;
+#include <algorithm>
 
 // Fill up the list of IPs
 void fill_the_pool(pool_t &res)
@@ -31,7 +16,7 @@ void fill_the_pool(pool_t &res)
         // std::cin.rdbuf(in.rdbuf()); // redirect std::cin to input/ip_filter.tsv
         for (std::string line; std::getline(std::cin, line);)
         {
-            ip_addr_t v(nof_addr_groups);
+            ip_addr_t v{0};
             auto i = 0;
             for (std::string::size_type start = 0; start != std::string::npos; ++i)
             {
@@ -50,17 +35,7 @@ void fill_the_pool(pool_t &res)
     }
 }
 
-// Forms up a a 4-bytes int representation of an IP address
-// to enable comparison of addresses
-inline unsigned int make_int(const ip_addr_t &addr)
-{
-    unsigned int res = 0;
-    for (auto i : addr)
-        res = res * _256_ + i;
-    return res;
-}
-
-// Outputs an IP-address vector to std::cout
+// Outputs an IP-address to std::cout
 void output_address(const ip_addr_t &addr)
 {
     std::stringstream ss;
@@ -71,14 +46,6 @@ void output_address(const ip_addr_t &addr)
     auto s = ss.str();
     s = s.substr(0, s.size() - 1);
     std::cout << s << std::endl;
-}
-
-// Outputs the whole vector of IP-addresses,
-// - once for every provided filter
-template <typename... Lambda>
-void multi_output_ip_pool(Lambda &&...filters)
-{
-    (void(std::for_each(ip_pool.begin(), ip_pool.end(), std::forward<Lambda>(filters))), ...);
 }
 
 // Inputs, sorts and filter-outputs IP addresses
