@@ -5,15 +5,12 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <algorithm>
 
 // Fill up the list of IPs
 void fill_the_pool(pool_t &res)
 {
     try
     {
-        // std::ifstream in("input/ip_filter.tsv");
-        // std::cin.rdbuf(in.rdbuf()); // redirect std::cin to input/ip_filter.tsv
         for (std::string line; std::getline(std::cin, line);)
         {
             ip_addr_t v{0};
