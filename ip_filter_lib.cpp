@@ -1,13 +1,16 @@
-#include "ip_filter.h"
-#include "config.h"
+#include "ip_filter_lib.h"
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <algorithm>
+
+// Storage for static member
+pool_t IPList::ip_pool;
 
 // Fill up the list of IPs
-void fill_the_pool(pool_t &res)
+void IPList::fill_the_pool()
 {
     try
     {
@@ -23,7 +26,7 @@ void fill_the_pool(pool_t &res)
                     break;
                 start = stop + 1;
             };
-            res.push_back(v);
+            ip_pool.push_back(v);
         }
     }
     catch (const std::exception &e)
@@ -45,22 +48,12 @@ void output_address(const ip_addr_t &addr)
     std::cout << s << std::endl;
 }
 
-// Inputs, sorts and filter-outputs IP addresses
-int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[])
+void IPList::output_the_pool()
 {
-    // Makes the pool of IP-addresses in memory
-    fill_the_pool(ip_pool);
-
-    // Performs sorting
-    std::sort(ip_pool.begin(), ip_pool.end(),
-              [](const ip_addr_t &a, const ip_addr_t &b) -> bool
-              {
-                  return (make_int(a) > make_int(b));
-              });
-
-    // Does filtered output
+    // Perform filtered output
     multi_output_ip_pool(
-        [](auto &addr) -> void
+        [](auto &addr)
+            -> void
         { output_address(addr); },
 
         [](auto &addr) -> void
@@ -74,5 +67,13 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[])
             for(auto i:addr)
                 res = res || i == FILT_ADR4;
             if (res) output_address(addr); });
-    return 0;
+}
+
+void IPList::sort_the_pool()
+{
+    std::sort(ip_pool.begin(), ip_pool.end(),
+              [](const ip_addr_t &a, const ip_addr_t &b) -> bool
+              {
+                  return (make_int(a) > make_int(b));
+              });
 }
