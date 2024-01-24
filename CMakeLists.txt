@@ -18,9 +18,9 @@ configure_file(config.h.in config.h)
 
 add_executable(ip_filter main.cpp)
 add_library(ip_filter_lib ip_filter_lib.cpp)
-add_executable(ip_filter_test ip_filter_test.cpp)
+add_executable(test_ip_filter test_ip_filter.cpp)
 
-set_target_properties(ip_filter ip_filter_lib ip_filter_test PROPERTIES
+set_target_properties(ip_filter ip_filter_lib test_ip_filter PROPERTIES
     CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
 )
@@ -29,7 +29,7 @@ target_include_directories(ip_filter
 )
 
 target_link_libraries(ip_filter PRIVATE ip_filter_lib)
-target_link_libraries(ip_filter_test
+target_link_libraries(test_ip_filter
     GTest::gtest_main
     ip_filter_lib
 )
@@ -64,8 +64,8 @@ endif()
 
 enable_testing()
 include(GoogleTest)
-gtest_discover_tests(ip_filter_test)
-# add_test(ip_filter_test  ip_filter_test)
+gtest_discover_tests(test_ip_filter)
+# add_test(test_ip_filter  test_ip_filter)
 
 
 

@@ -7,6 +7,7 @@
 #include <algorithm>
 
 // Storage for static member
+static IPList list;
 pool_t IPList::ip_pool;
 
 // Fill up the list of IPs
@@ -26,7 +27,7 @@ void IPList::fill_the_pool()
                     break;
                 start = stop + 1;
             };
-            ip_pool.push_back(v);
+            list.ip_pool.push_back(v);
         }
     }
     catch (const std::exception &e)
@@ -50,6 +51,7 @@ void output_address(const ip_addr_t &addr)
 
 void IPList::output_the_pool()
 {
+   try{
     // Perform filtered output
     multi_output_ip_pool(
         [](auto &addr)
@@ -67,13 +69,14 @@ void IPList::output_the_pool()
             for(auto i:addr)
                 res = res || i == FILT_ADR4;
             if (res) output_address(addr); });
+   }
+   catch (const std::exception &e)
+   {
+       std::cerr << e.what() << std::endl;
+   }
 }
 
 void IPList::sort_the_pool()
 {
-    std::sort(ip_pool.begin(), ip_pool.end(),
-              [](const ip_addr_t &a, const ip_addr_t &b) -> bool
-              {
-                  return (make_int(a) > make_int(b));
-              });
+    std::sort(list.ip_pool.begin(), list.ip_pool.end(), IPList::compare);
 }
