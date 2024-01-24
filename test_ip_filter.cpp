@@ -18,7 +18,7 @@ TEST(test_ip_filter, InputAddresses)
     // Call fill method
     IPList::fill_the_pool();
 
-    // Check number of lines input
+    // Check number of input lines
     auto ip_pool = list.get_IP_List();
     EXPECT_EQ(ip_pool.size(), nof_lines);
 }
