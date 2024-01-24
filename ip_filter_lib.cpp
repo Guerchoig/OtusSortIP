@@ -6,7 +6,7 @@
 #include <sstream>
 #include <algorithm>
 
-// Storage for static member
+// Storage for static members
 static IPList list;
 pool_t IPList::ip_pool;
 
