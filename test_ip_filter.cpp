@@ -32,14 +32,14 @@ TEST(test_ip_filter, Sorting)
     // Check if every member is smaller than the previous
     auto ip_pool = list.get_IP_List();
     unsigned int prev = IPList::make_int(ip_pool.front());
-    auto isGT = [&prev](bool acc, const ip_addr_t &el) -> bool
+    auto isGE = [&prev](bool acc, const ip_addr_t &el) -> bool
     {
         auto curr = IPList::make_int(el);
         acc = acc && prev >= curr;
         prev = curr;
         return acc;
     };
-    bool res = std::accumulate(ip_pool.begin() + 1, ip_pool.end(), true, isGT);
+    bool res = std::accumulate(ip_pool.begin() + 1, ip_pool.end(), true, isGE);
 
     // Was ip_pool still there?
     EXPECT_EQ(ip_pool.size(), nof_lines);
