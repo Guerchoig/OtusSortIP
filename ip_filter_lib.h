@@ -19,12 +19,11 @@ using ip_addr_t = std::array<unsigned char, nof_addr_groups>; // size = nof_addr
 // The type of the whole list of IP addresses
 using pool_t = std::vector<ip_addr_t>;
 
-// Outputs the whole vector of IP-addresses,
-// - once for every provided filter
-
 class IPList
 {
 private:
+    // Outputs the whole vector of IP-addresses,
+    // - once for every provided filter
     template <typename... Lambda>
     static void multi_output_ip_pool(Lambda &&...filters)
     {
