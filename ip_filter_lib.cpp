@@ -37,7 +37,7 @@ void IPList::fill_the_pool()
 }
 
 // Outputs an IP-address to std::cout
-void output_address(const ip_addr_t &addr)
+void IPList::output_address(const ip_addr_t &addr)
 {
     std::stringstream ss;
     for (auto triade : addr)
@@ -51,29 +51,31 @@ void output_address(const ip_addr_t &addr)
 
 void IPList::output_the_pool()
 {
-   try{
-    // Perform filtered output
-    multi_output_ip_pool(
-        [](auto &addr)
-            -> void
-        { output_address(addr); },
+    try
+    {
+        // Perform filtered output
+        multi_output_ip_pool(
+            [](auto &addr)
+                -> void
+            { output_address(addr); },
 
-        [](auto &addr) -> void
-        { if(addr[0] == FILT_ADR1) output_address(addr); },
+            [](auto &addr) -> void
+            { if(addr[0] == FILT_ADR1) output_address(addr); },
 
-        [](auto &addr) -> void
-        { if(addr[0] == FILT_ADR2 && addr[1] == FILT_ADR3) output_address(addr); },
+            [](auto &addr) -> void
+            { if(addr[0] == FILT_ADR2 && addr[1] == FILT_ADR3) output_address(addr); },
 
-        [](auto &addr) -> void
-        { bool res = false;
+            [](auto &addr) -> void
+            { bool res = false;
             for(auto i:addr)
                 res = res || i == FILT_ADR4;
-            if (res) output_address(addr); });
-   }
-   catch (const std::exception &e)
-   {
-       std::cerr << e.what() << std::endl;
-   }
+            if (res)
+                IPList::output_address(addr); });
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 void IPList::sort_the_pool()

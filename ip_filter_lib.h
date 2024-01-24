@@ -29,7 +29,7 @@ private:
     {
         (void(std::for_each(ip_pool.begin(), ip_pool.end(), std::forward<Lambda>(filters))), ...);
     }
-
+    static void output_address(const ip_addr_t &addr);
     static pool_t ip_pool;
 
 public:
@@ -39,12 +39,12 @@ public:
     static void sort_the_pool();
     static void output_the_pool();
     static inline const pool_t &get_IP_List() { return ip_pool; };
-    static inline bool compare(const ip_addr_t &a, const ip_addr_t &b) { return (make_int(a) > make_int(b)); };
     static inline unsigned int make_int(const ip_addr_t &addr)
     {
         unsigned int res = 0;
         for (auto i : addr)
             res = res * _256_ + i;
         return res;
-    }
+    };
+    static inline bool compare(const ip_addr_t &a, const ip_addr_t &b) { return (make_int(a) > make_int(b)); };
 };
